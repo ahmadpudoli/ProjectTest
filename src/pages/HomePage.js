@@ -187,7 +187,7 @@ class HomePage extends React.Component {
   const checkout = async (response) =>{
     
     const uri_file = response.assets[0].uri;
-    const filePath = uri_file.replace('file://', '');
+    const filePath =  uri_file.replace('file://', '');
     self = this;
 
     RNFetchBlob.fetch(
@@ -331,7 +331,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#C7E3FC',
     alignItems: 'center',
   },
   titleText: {
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   },
   textInfoPresensi: {
     alignItems: 'center',
-    backgroundColor: '#DDDfff',
+    backgroundColor: '#7AD695',
     padding: 10,
     //marginVertical: 10,
     textAlign: 'center',
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
+    backgroundColor: '#2A99F9',
     padding: 1,
     fontSize: 12,
     //marginVertical: 10,

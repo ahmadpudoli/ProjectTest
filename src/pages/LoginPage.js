@@ -1,8 +1,7 @@
 import React from 'react';
-import { Alert, Button, TextInput, View, StyleSheet, ToastAndroid } from 'react-native';
+import { Alert, Button,TouchableOpacity, TextInput,Text, View, StyleSheet, ToastAndroid } from 'react-native';
 import axios from 'axios';
 import { UrlActions } from '../actions/UrlActions';
-const baseUrl = 'http://192.168.8.104:3000';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -53,6 +52,7 @@ class LoginPage extends React.Component {
 
   render() {
     return (
+      
       <View style={styles.container}>
         <TextInput
           value={this.state.username}
@@ -67,12 +67,15 @@ class LoginPage extends React.Component {
           secureTextEntry={true}
           style={styles.input}
         />
-        
-        <Button
-          title={'Login'}
-          style={styles.input}
-          onPress={this.onLogin.bind(this)}
-        />
+        <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.buttonStyle}
+            onPress={this.onLogin.bind(this)}>
+            <Text style={styles.textStyle}>
+              LOGIN
+            </Text>
+          </TouchableOpacity>
+
       </View>
      
     );
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#C7E3FC',
   },
   input: {
     width: 200,
@@ -93,6 +96,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     marginBottom: 10,
+    backgroundColor: '#ecf0f1'
+  },
+  textStyle: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 17
+  },
+  buttonStyle: {
+    width: 200,
+    height: 44,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginBottom: 10,
+    backgroundColor: '#207cca'
   },
 });
 
