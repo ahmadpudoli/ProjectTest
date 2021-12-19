@@ -1,9 +1,11 @@
 import React from 'react';
 import { Alert, Button,TouchableOpacity, TextInput,Text, View, StyleSheet, ToastAndroid } from 'react-native';
+// https://www.npmjs.com/package/react-native-form-validator
+import ValidationComponent from 'react-native-form-validator';
 import axios from 'axios';
 import { UrlActions } from '../actions/UrlActions';
 
-class LoginPage extends React.Component {
+class LoginPage extends ValidationComponent  {
   constructor(props) {
     super(props);
     
@@ -11,10 +13,30 @@ class LoginPage extends React.Component {
       username: '',
       password: '',
     };
+
+  }
+
+  _onSubmit() {
+    // Call ValidationComponent validate method
+    this.validate({
+      username: {required: true},
+      password: {required: true},
+      // number: {numbers: true},
+      // date: {date: 'YYYY-MM-DD'}
+    });
   }
 
   
   async onLogin() {
+
+    // let validate = this.validate({
+    //   username: {required: true},
+    //   password: {required: true},
+    //   // number: {numbers: true},
+    //   // date: {date: 'YYYY-MM-DD'}
+    // });
+    // if(!validate) return;
+
     const { username, password } = this.state;
     const redirectToHome = (params)=>{
       this.props.navigation.navigate('Home',params);
@@ -27,24 +49,28 @@ class LoginPage extends React.Component {
         .then(function (response) {
           // handle success
           if(response.data.success === true){
-            ToastAndroid.show(response.data.message, ToastAndroid.LONG);
             const token = response.data.result.token;
             const role = response.data.result.role;
-            //alert(token);
-            redirectToHome({
-              token: response.data.result.token,
-              role: response.data.result.role,
-              id_karyawan: response.data.result.id_karyawan
-            });
+            if(response.data.result.id_karyawan == null){
+              ToastAndroid.show("Super Admin tidak dapat melakukan presensi", ToastAndroid.LONG);
+            }else{
+              ToastAndroid.show(response.data.message, ToastAndroid.LONG);
+              redirectToHome({
+                token: response.data.result.token,
+                role: response.data.result.role,
+                id_karyawan: response.data.result.id_karyawan
+              });
+            }
+            
           }
         })
         .catch(function (error) {
           // handle error
           console.log(error);
-          if(error.data != undefined){
-            alert(error.data.message);
+          if(error.response){
+            ToastAndroid.show(error.response.data.message, ToastAndroid.LONG);
           }else{
-            alert(error.message);
+            ToastAndroid.show(error.message, ToastAndroid.LONG);
           }
         });
     
@@ -60,6 +86,7 @@ class LoginPage extends React.Component {
           placeholder={'Username'}
           style={styles.input}
         />
+        {this.isFieldInError('username') && this.getErrorsInField('username').map(errorMessage => <Text>{errorMessage}</Text>) }
         <TextInput
           value={this.state.password}
           onChangeText={(password) => this.setState({ password })}
@@ -67,9 +94,11 @@ class LoginPage extends React.Component {
           secureTextEntry={true}
           style={styles.input}
         />
+        {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text>{errorMessage}</Text>) }
         <TouchableOpacity
             activeOpacity={0.5}
             style={styles.buttonStyle}
+            onPress={this._onPressButton}
             onPress={this.onLogin.bind(this)}>
             <Text style={styles.textStyle}>
               LOGIN

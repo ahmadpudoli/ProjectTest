@@ -21,6 +21,8 @@ import {
 } from 'react-native-image-picker';
 import {UrlActions} from '../actions/UrlActions';
 import {format} from 'date-fns';
+import GetLocation from 'react-native-get-location'
+import Geolocation from 'react-native-geolocation-service';
 
 
 class HomePage extends React.Component {
@@ -32,23 +34,26 @@ class HomePage extends React.Component {
         infoCheckout: "-",
         statusCheckin: false,
         statusCheckout: false,
-        tgl_presensi: format(new Date(), 'dd MMMM yyyy')
+        tgl_presensi: format(new Date(), 'dd MMMM yyyy'),
+        longitute: -6.175392, // latitude monas jakarta
+        latitude: 106.827153, // longitude monas, jakarta
     };
     this.showInfoPresensiHariIni();
   }  
 
   
   componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    this.showInfoPresensiHariIni(); 
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   componentWillUnmount() {
-      BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 
   handleBackButton() {
-      ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
-      return true;
+    ToastAndroid.show('Back button is pressed', ToastAndroid.SHORT);
+    return true;
   }
 
   setInfoCheckIn = (newText)=>{
@@ -100,15 +105,12 @@ class HomePage extends React.Component {
         alert(error.message);
       });
   }
-  
-  useEffect() {    
-      this.showInfoPresensiHariIni(); 
-    };
-    
+      
   
   render() {
     console.log(this.props);
         
+    
     const requestCameraPermission = async () => {
       if (Platform.OS === 'android') {
         try {
@@ -167,8 +169,8 @@ class HomePage extends React.Component {
               // part file from storage
               { name : 'filecheckin', filename : response.assets[0].fileName, type: response.assets[0].type, data: RNFetchBlob.wrap(filePath)},
               // elements without property `filename` will be sent as plain text
-              { name : 'lat', data : "100"},
-              { name : 'lang', data : "200"},
+              { name : 'lat', data : self.state.latitude.toString()},
+              { name : 'lang', data : self.state.longitute.toString()},
             ],
         ).then((resp) => {
           console.log('Response Saya');
@@ -202,8 +204,8 @@ class HomePage extends React.Component {
               // part file from storage
               { name : 'filecheckout', filename : response.assets[0].fileName, type: response.assets[0].type, data: RNFetchBlob.wrap(filePath)},
               // elements without property `filename` will be sent as plain text
-              { name : 'lat', data : "100"},
-              { name : 'lang', data : "200"},
+              { name : 'lat', data : self.state.latitude.toString()},
+              { name : 'lang', data : self.state.longitute.toString()},
             ],
         ).then((resp) => {
           console.log('Response Saya');
